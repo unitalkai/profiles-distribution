@@ -1,66 +1,91 @@
-# Alma — Unitalk AI Collaborator
+# Unitalk AI — Hermes Profile Distributions
 
-A Hermes Agent [profile distribution](https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions): a complete autonomous collaborator for prospection, calls, email, and admin work.
+Installable [Hermes Agent](https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions) profiles, built by Unitalk AI.
 
-## Install
+Each profile is a complete agent — personality, skills, config, cron jobs, MCP connections — packaged as its own git repository. Anyone with access can install the whole agent with one command, update it in place, and keep their own memories, sessions, and API keys untouched.
 
-```bash
-hermes profile install github.com/unitalkai/profiles-distribution --alias
-```
+> **This repository is the catalogue.** Each profile lives in its own repo so it installs with a single command — Hermes takes `distribution.yaml` from the repo root, so a profile cannot live in a subfolder here.
 
-This gives you a profile named `alma`, installs its skills, wires up its MCP connections, and stages its cron jobs (paused).
+## Available profiles
 
-## Configure
+### SEO Auditor
 
-The installer prints which environment variables are required. Fill them in:
+A continuous SEO auditor that returns **impact-ranked action plans**, not diagnostics. Crawls sites as a search engine sees them, finds indexability defects, and ranks every finding by Impact ÷ Effort.
 
 ```bash
-cp ~/.hermes/profiles/alma/.env.EXAMPLE ~/.hermes/profiles/alma/.env
-# Edit .env with your keys
+hermes profile install github.com/unitalkai/hermes-profile-seo-auditor --alias
 ```
 
-| Variable | Required | Purpose |
-|---|---|---|
-| `OPENAI_API_KEY` | yes | Model access |
-| `UNITALK_API_KEY` | yes | Unitalk tools MCP server |
-| `GOOGLE_CLIENT_ID` | no | Gmail / Calendar integration |
-| `GOOGLE_CLIENT_SECRET` | no | Gmail / Calendar integration |
-
-## Run
-
-```bash
-alma chat                          # with --alias
-hermes -p alma chat                # without
-```
-
-Alma also works through any gateway platform (Telegram, Discord, Slack, …) — configure the channel for the `alma` profile and address it there.
-
-## Update
-
-```bash
-hermes profile update alma
-```
-
-Distribution-owned files are replaced; your `config.yaml`, memories, sessions, and API keys stay put.
-
-## What's in here
-
-| Path | Purpose |
+| | |
 |---|---|
-| `distribution.yaml` | Manifest — name, version, required env vars |
-| `SOUL.md` | Personality: autonomie, open source, souveraineté |
-| `config.yaml` | Model and tool defaults |
-| `mcp.json` | Unitalk tools MCP server |
-| `skills/unitalk-core/` | Prospection, call prep, email triage, admin procedures |
-| `cron/jobs.json` | Scheduled jobs (installed paused — review with `hermes -p alma cron list`) |
+| Repo | [unitalkai/hermes-profile-seo-auditor](https://github.com/unitalkai/hermes-profile-seo-auditor) |
+| Version | 1.0.0 |
+| Requires | `OPENAI_API_KEY` · optional `PAGESPEED_API_KEY`, `SERPAPI_KEY` |
+| Skills | `seo-crawl`, `seo-onpage`, `seo-report` |
+| Cron | Weekly site audit, monthly index coverage (both ship paused) |
 
-## Review before you trust
+Read the [profile README](https://github.com/unitalkai/hermes-profile-seo-auditor) for the full setup.
 
-Cron jobs ship **paused** and must be enabled deliberately. `SOUL.md` and skills are active the moment you chat — read them first.
+---
 
-## Version
+*More profiles are in development.*
 
-Current: **1.0.0**. Track with `hermes profile info alma`.
+## Installing
+
+Every profile follows the same three steps.
+
+**1. Install**
+
+```bash
+hermes profile install github.com/unitalkai/<repo-name> --alias
+```
+
+The installer shows the manifest — name, version, author, required env vars — before anything is written. Add `--yes` to skip the confirmation, `--name <local-name>` to install under a different profile name.
+
+**2. Fill in API keys**
+
+```bash
+cp ~/.hermes/profiles/<name>/.env.EXAMPLE ~/.hermes/profiles/<name>/.env
+```
+
+Each profile ships a `.env.EXAMPLE` listing exactly which keys it needs. Credentials are never in the repo — every installer brings their own.
+
+**3. Run it**
+
+```bash
+<name> chat                # with --alias
+hermes -p <name> chat      # without
+```
+
+Profiles also work through any gateway platform (Telegram, Discord, Slack, …) — configure the channel for that profile and address it there.
+
+## Updating
+
+```bash
+hermes profile update <name>
+```
+
+Distribution-owned files (`SOUL.md`, `skills/`, `mcp.json`, `cron/jobs.json`) are replaced from the new version. Your `config.yaml`, memories, sessions, reports, and API keys stay put. Pass `--force-config` if you want the distribution's config back too.
+
+## Trust and safety
+
+Profile distributions are unsigned. Installing one is like installing a browser extension: low friction, high power, trust the source.
+
+Two things worth knowing before you run someone else's agent:
+
+- **`SOUL.md` and skills are active immediately.** Read them before your first chat if you did not build the profile.
+- **Cron jobs ship paused** and never schedule themselves. Review with `hermes -p <name> cron list` and enable only what you trust.
+
+Never included in a distribution: `auth.json`, `.env`, `memories/`, `sessions/`, `state.db`, logs, caches. The installer strips these even if an author ships them by mistake.
+
+## Repository naming
+
+Profiles follow `hermes-profile-<name>` so they group together and are recognisable next to the org's other `hermes-*` repos.
+
+| Repo | What it is |
+|---|---|
+| `hermes-profile-seo-auditor` | SEO auditing agent |
+| `profiles-distribution` | This catalogue |
 
 ## License
 
