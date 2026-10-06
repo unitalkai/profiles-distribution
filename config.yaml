@@ -1,5 +1,3 @@
-# Alma Profile Configuration
-
 display:
   interface: tui
   theme: dark
@@ -22,7 +20,6 @@ tools:
     - patch
     - search_files
     - execute_code
-  disabled: []
 
 memory:
   backend: sqlite
@@ -30,4 +27,3 @@ memory:
 
 session:
   auto_save: true
-  compression: enabled

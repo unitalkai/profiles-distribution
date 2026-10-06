@@ -1,0 +1,18 @@
+{
+  "jobs": [
+    {
+      "id": "daily-prospection",
+      "name": "Daily Prospection",
+      "schedule": "0 9 * * 1-5",
+      "prompt": "Run the daily prospection routine: review assigned leads, qualify new prospects, update the CRM, and send a summary of the day's findings to the team.",
+      "enabled": false
+    },
+    {
+      "id": "email-triage",
+      "name": "Email Triage",
+      "schedule": "0 */4 * * *",
+      "prompt": "Triage the inbox: tag and prioritize urgent threads, draft responses for review, and flag anything requiring a human decision.",
+      "enabled": false
+    }
+  ]
+}

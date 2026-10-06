@@ -1,26 +1,39 @@
-# Unitalk AI — Profile Distributions
+# Alma — Unitalk AI Collaborator
 
-A collection of ready-to-use [Hermes Agent](https://github.com/NousResearch/hermes-agent) profiles, packaged as git distributions.
-
-## What's in here
-
-Each folder is a self-contained profile distribution — personality, skills, config, cron jobs, and MCP connections. Install one with a single command and you get a fully configured agent.
-
-| Profile | Description | Install |
-|---------|-------------|---------|
-| [`alma`](./alma/) | Unitalk AI collaborator — autonomous prospection, calls, emails, admin tasks | `hermes profile install github.com/unitalkai/profiles-distribution#alma` |
+A Hermes Agent [profile distribution](https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions): a complete autonomous collaborator for prospection, calls, email, and admin work.
 
 ## Install
 
 ```bash
-# Install a specific profile
-hermes profile install github.com/unitalkai/profiles-distribution#alma
-
-# Or clone and install locally
-git clone https://github.com/unitalkai/profiles-distribution.git
-cd profiles-distribution
-hermes profile install ./alma --alias alma
+hermes profile install github.com/unitalkai/profiles-distribution --alias
 ```
+
+This gives you a profile named `alma`, installs its skills, wires up its MCP connections, and stages its cron jobs (paused).
+
+## Configure
+
+The installer prints which environment variables are required. Fill them in:
+
+```bash
+cp ~/.hermes/profiles/alma/.env.EXAMPLE ~/.hermes/profiles/alma/.env
+# Edit .env with your keys
+```
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `OPENAI_API_KEY` | yes | Model access |
+| `UNITALK_API_KEY` | yes | Unitalk tools MCP server |
+| `GOOGLE_CLIENT_ID` | no | Gmail / Calendar integration |
+| `GOOGLE_CLIENT_SECRET` | no | Gmail / Calendar integration |
+
+## Run
+
+```bash
+alma chat                          # with --alias
+hermes -p alma chat                # without
+```
+
+Alma also works through any gateway platform (Telegram, Discord, Slack, …) — configure the channel for the `alma` profile and address it there.
 
 ## Update
 
@@ -28,34 +41,26 @@ hermes profile install ./alma --alias alma
 hermes profile update alma
 ```
 
-Your memories, sessions, and API keys are preserved on update.
+Distribution-owned files are replaced; your `config.yaml`, memories, sessions, and API keys stay put.
 
-## Credentials
+## What's in here
 
-Each profile ships a `.env.EXAMPLE` with the required environment variables. Copy it to `.env` and fill in your own keys:
+| Path | Purpose |
+|---|---|
+| `distribution.yaml` | Manifest — name, version, required env vars |
+| `SOUL.md` | Personality: autonomie, open source, souveraineté |
+| `config.yaml` | Model and tool defaults |
+| `mcp.json` | Unitalk tools MCP server |
+| `skills/unitalk-core/` | Prospection, call prep, email triage, admin procedures |
+| `cron/jobs.json` | Scheduled jobs (installed paused — review with `hermes -p alma cron list`) |
 
-```bash
-cd ~/.hermes/profiles/alma
-cp .env.EXAMPLE .env
-# Edit .env with your API keys
-```
+## Review before you trust
 
-## Structure
+Cron jobs ship **paused** and must be enabled deliberately. `SOUL.md` and skills are active the moment you chat — read them first.
 
-```
-profiles-distribution/
-├── README.md              # This file
-├── alma/                  # Profile distribution
-│   ├── distribution.yaml  # Manifest (name, version, env requirements)
-│   ├── SOUL.md            # Agent personality / system prompt
-│   ├── config.yaml        # Model, temperature, tool defaults
-│   ├── .env.EXAMPLE       # Required environment variables
-│   ├── skills/            # Bundled skills
-│   ├── cron/              # Scheduled tasks
-│   └── mcp.json           # MCP server connections
-└── <next-profile>/
-    └── ...
-```
+## Version
+
+Current: **1.0.0**. Track with `hermes profile info alma`.
 
 ## License
 
